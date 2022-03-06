@@ -12,6 +12,10 @@ const reducer = (state, action) => {
             ]
         case 'delete_blogpost':
             return state.filter(blog => blog.id !== action.payload)
+        case 'edit_payload':
+            return state.map((blogPost) => {
+                return blogPost.id === action.payload.id ? action.payload : blogPost;
+            })
         default:
             return state;
     }
@@ -22,15 +26,20 @@ const addBlogPost = dispatch => {
    return async (title, content, callback) => {
        try{
             dispatch({ type:'add_blogpost' , payload: { title, content } })
-            callback();
+            if(callback) {
+                callback();
+            }
        }
        catch (error){console.log(error)}
    }
 }
 
 const editBlogPost = dispatch => {
-   return async (id, title, content) => {
-     dispatch({ type: 'edit_payload', payload: {id : id , title:title, content:content }})
+   return (id, title, content, callback) => {
+     dispatch({ type: 'edit_payload', payload: {id : id , title: title, content:content }})
+      if(callback) {
+            callback();
+        }
    }
 }
 
